@@ -179,17 +179,17 @@ main {
 }
 
 
-/* Loader Container */
+/* Main Loader */
 .loader {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
     background: white;
     position: fixed;
     width: 100%;
     top: 0;
     left: 0;
+    height: 100vh;
     z-index: 9999;
 }
 
@@ -197,7 +197,7 @@ main {
 .wave {
     width: 5px;
     height: 100px;
-    background: #e02672;
+    background: #ff2e82;
     margin: 0 5px;
     border-radius: 10px;
     animation: wave-animation 1s infinite ease-in-out;
@@ -209,15 +209,20 @@ main {
 .wave:nth-child(5) { animation-delay: 0.4s; }
 
 @keyframes wave-animation {
-    0%, 40%, 100% {
-        transform: scaleY(0.3);
-    }
-    20% {
-        transform: scaleY(1);
-    }
+    0%, 40%, 100% { transform: scaleY(0.3); }
+    20% { transform: scaleY(1); }
 }
 
-
+/* Bottom loader */
+.bottom-loader {
+    position: static;
+    height: 80px;
+    background: transparent;
+    margin: 20px auto;
+}
+.bottom-loader .wave {
+    height: 60px;
+}
 
 
 @media (max-width: 480px) {
