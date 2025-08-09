@@ -1,67 +1,85 @@
-document.getElementById("toggleButton").addEventListener("click", function() {
-    let floatingBar = document.getElementById("floatingBar");
-    floatingBar.style.display = (floatingBar.style.display === "block") ? "none" : "block";
-});
+// ======= CONFIG =======
+const totalImages = 60; // Total number of images available
+const imagesPerLoad = 15;
+let loadedCount = 0;
+let isLoading = false;
 
-document.addEventListener("contextmenu", function(event) {
-    event.preventDefault();
-});
+const gallery = document.getElementById("gallery");
+const topLoader = document.getElementById("topLoader");
+const bottomLoader = document.getElementById("bottomLoader");
+const backToTopBtn = document.getElementById("backToTop");
 
-if ("serviceWorker" in navigator) {
-    window.addEventListener("load", () => {
-        navigator.serviceWorker.register("/sw.js")
-            .then(() => console.log("Service Worker Registered"))
-            .catch((error) => console.log("Service Worker Registration Failed:", error));
+// Create wave loader bars dynamically
+function createWaveLoader(container) {
+    container.innerHTML = "";
+    for (let i = 0; i < 5; i++) {
+        const bar = document.createElement("div");
+        container.appendChild(bar);
+    }
+}
+
+// Show loader
+function showLoader(loader) {
+    loader.style.display = "flex";
+    createWaveLoader(loader);
+}
+
+// Hide loader
+function hideLoader(loader) {
+    loader.style.display = "none";
+}
+
+// Load images function
+function loadImages(count) {
+    return new Promise(resolve => {
+        setTimeout(() => { // Simulate loading delay
+            for (let i = 0; i < count && loadedCount < totalImages; i++) {
+                const img = document.createElement("img");
+                img.src = `https://picsum.photos/300/200?random=${loadedCount + 1}`;
+                gallery.appendChild(img);
+                loadedCount++;
+            }
+            resolve();
+        }, 1000);
     });
 }
 
-// ------------------ Gallery Lazy Loading ------------------
-const imagePaths = [
-    "16.webp","17.webp","18.webp","265.webp","266.webp","267.webp","268.webp","269.webp","270.webp",
-    "238.webp","239.webp","240.webp","241.webp","242.webp","243.webp",
-    // Add ALL your image paths here in order
-];
-const gallery = document.getElementById("gallery");
-const loader = document.getElementById("loader");
-const bottomLoader = document.getElementById("bottomLoader");
-
-let batchSize = 15;
-let currentIndex = 0;
-
-function loadBatch() {
-    let end = Math.min(currentIndex + batchSize, imagePaths.length);
-    for (let i = currentIndex; i < end; i++) {
-        let img = document.createElement("img");
-        img.src = imagePaths[i];
-        img.alt = "Design " + imagePaths[i].split(".")[0];
-        gallery.appendChild(img);
-    }
-    currentIndex = end;
+// First load
+async function initialLoad() {
+    showLoader(topLoader);
+    await loadImages(imagesPerLoad);
+    hideLoader(topLoader);
 }
 
-function loadInitial() {
-    // Load first 15 with main loader
-    setTimeout(() => {
-        loader.style.display = "none";
-        loadBatch();
-    }, 1000); // Simulated load delay
+// Load more images when scrolling
+async function loadMore() {
+    if (isLoading || loadedCount >= totalImages) return;
+    isLoading = true;
+    showLoader(bottomLoader);
+    await loadImages(imagesPerLoad);
+    hideLoader(bottomLoader);
+    isLoading = false;
 }
 
-function loadNextBatch() {
-    if (currentIndex >= imagePaths.length) return;
-    bottomLoader.style.display = "flex";
-    setTimeout(() => {
-        loadBatch();
-        bottomLoader.style.display = "none";
-    }, 1000); // Simulated load delay
-}
-
-// Initial load
-window.addEventListener("load", loadInitial);
-
-// Load next batch on scroll
+// Infinite scroll listener
 window.addEventListener("scroll", () => {
-    if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 50) {
-        loadNextBatch();
+    // Show "Back to Top" button
+    if (window.scrollY > 300) {
+        backToTopBtn.style.display = "block";
+    } else {
+        backToTopBtn.style.display = "none";
+    }
+
+    // Load more images when near bottom
+    if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 200) {
+        loadMore();
     }
 });
+
+// Back to Top click
+backToTopBtn.addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+});
+
+// Start the gallery
+initialLoad();
