@@ -178,54 +178,8 @@ main {
     vertical-align: middle;
 }
 
-
-/* Main Loader */
-.loader {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: white;
-    position: fixed;
-    width: 100%;
-    top: 0;
-    left: 0;
-    height: 100vh;
-    z-index: 9999;
-}
-
-/* Waves */
-.wave {
-    width: 5px;
-    height: 100px;
-    background: #ff2e82;
-    margin: 0 5px;
-    border-radius: 10px;
-    animation: wave-animation 1s infinite ease-in-out;
-}
-
-.wave:nth-child(2) { animation-delay: 0.1s; }
-.wave:nth-child(3) { animation-delay: 0.2s; }
-.wave:nth-child(4) { animation-delay: 0.3s; }
-.wave:nth-child(5) { animation-delay: 0.4s; }
-
-@keyframes wave-animation {
-    0%, 40%, 100% { transform: scaleY(0.3); }
-    20% { transform: scaleY(1); }
-}
-
-/* Bottom loader */
-.bottom-loader {
-    position: static;
-    height: 80px;
-    background: transparent;
-    margin: 20px auto;
-}
-.bottom-loader .wave {
-    height: 60px;
-}
-
 .back-to-top {
-    display: none; /* Hidden by default */
+    display: none;
     position: fixed;
     bottom: 30px;
     right: 30px;
