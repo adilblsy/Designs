@@ -197,7 +197,7 @@ main {
 .wave {
     width: 5px;
     height: 100px;
-    background: #3498db;
+    background: #e02672;
     margin: 0 5px;
     border-radius: 10px;
     animation: wave-animation 1s infinite ease-in-out;
@@ -217,10 +217,7 @@ main {
     }
 }
 
-/* Hide gallery initially */
-.gallery {
-    display: none;
-}
+
 
 
 @media (max-width: 480px) {
